@@ -4,7 +4,7 @@ import FlutterMacOS
 let windowWidth = 396.0
 let defaultWindowHeight = 190.0
 
-@NSApplicationMain
+@main
 class AppDelegate: FlutterAppDelegate {
 
 
