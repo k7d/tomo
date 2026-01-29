@@ -43,20 +43,31 @@ class AppDelegate: FlutterAppDelegate {
 
         channel.setMethodCallHandler { [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
             switch call.method {
-            case "updateStatusBarItem":
+            case "setStatusBarTimer":
                 if let args = call.arguments as? [String: Any],
-                   let remainingTime = args["remainingTime"] as? String,
-                   let completed = args["completed"] as? Double,
+                   let endTimeMs = args["endTimeMs"] as? Double,
+                   let totalDurationSeconds = args["totalDurationSeconds"] as? Double,
+                   let isPaused = args["isPaused"] as? Bool,
+                   let pausedRemainingSeconds = args["pausedRemainingSeconds"] as? Double,
                    let bgColor = args["bgColor"] as? Array<Double>,
                    let textColor = args["textColor"] as? Array<Double> {
-                    self?.statusBar?.statusItemView.remainingTime = remainingTime;
-                    self?.statusBar?.statusItemView.completed = completed;
-                    self?.statusBar?.statusItemView.bgColor = NSColor(red: bgColor[0], green: bgColor[1], blue: bgColor[2], alpha: 1)
-                    self?.statusBar?.statusItemView.textColor = NSColor(red: textColor[0], green: textColor[1], blue: textColor[2], alpha: 1)
+                    let endTime = Date(timeIntervalSince1970: endTimeMs / 1000.0)
+                    self?.statusBar?.statusItemView.setTimer(
+                        endTime: endTime,
+                        totalDurationSeconds: totalDurationSeconds,
+                        isPaused: isPaused,
+                        pausedRemainingSeconds: pausedRemainingSeconds,
+                        bgColor: NSColor(red: bgColor[0], green: bgColor[1], blue: bgColor[2], alpha: 1),
+                        textColor: NSColor(red: textColor[0], green: textColor[1], blue: textColor[2], alpha: 1)
+                    )
                     result(nil)
                 } else {
                     result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
                 }
+                break
+            case "clearStatusBarTimer":
+                self?.statusBar?.statusItemView.clearTimer()
+                result(nil)
                 break
             case "setContentHeight":
                 if let args = call.arguments as? [String: Any],

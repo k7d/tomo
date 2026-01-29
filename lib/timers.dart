@@ -129,15 +129,15 @@ class Timers extends StatelessWidget {
 
   void _updateStatusBarItem(StartedTimer? timer) {
     if (timer == null) {
-      platform.updateStatusBarItem(
-          remainingTimer: "",
-          completed: 0,
-          bgColor: grayColor,
-          textColor: grayTextColor);
+      platform.clearStatusBarTimer();
     } else {
-      platform.updateStatusBarItem(
-          remainingTimer: formatDuration(timer.remaining),
-          completed: timer.completed,
+      final endTimeMs = timer.start.add(timer.adjustedDuration).millisecondsSinceEpoch.toDouble();
+      final pausedRemaining = timer.isPaused ? timer.adjustedDuration.inSeconds.toDouble() : 0.0;
+      platform.setStatusBarTimer(
+          endTimeMs: endTimeMs,
+          totalDurationSeconds: timer.totalDuration.inSeconds.toDouble(),
+          isPaused: timer.isPaused,
+          pausedRemainingSeconds: pausedRemaining,
           bgColor: timer.config.color.rgbaColor,
           textColor: timer.config.color.rgbaTextColor);
     }
