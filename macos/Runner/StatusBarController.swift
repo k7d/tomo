@@ -4,6 +4,15 @@ func calcStatusItemLength(_ text: String) -> CGFloat {
     return max(CGFloat(text.count-1) * 8.0 + 14, 46);
 }
 
+extension NSColor {
+    func lighten(by amount: CGFloat) -> NSColor {
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        let rgb = usingColorSpace(.sRGB) ?? self
+        rgb.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        return NSColor(hue: h, saturation: s, brightness: min(b + amount, 1.0), alpha: a)
+    }
+}
+
 extension NSImage {
     func tinted(with color: NSColor) -> NSImage {
         let image = self.copy() as! NSImage
@@ -119,7 +128,7 @@ class StatusItemView {
         statusItem.length = calcStatusItemLength(remainingTime)
         let width = statusItem.length
         let height = NSStatusBar.system.thickness
-        let capturedBgColor = bgColor
+        let capturedBgColor = bgColor.lighten(by: 0.15)
         let capturedTextColor = textColor
         let capturedTintedIcon = tintedIcon
         let capturedFont = font
