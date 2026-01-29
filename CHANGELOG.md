@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.1.1
+
+- Fix status bar staying stuck at 0:00 when timer chains to next timer while app is unfocused
+
 ## 4.1.0
 
 - Fix menu bar timer not updating when app is unfocused on macOS Tahoe

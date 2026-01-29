@@ -646,6 +646,23 @@ class AppState extends ChangeNotifier {
     _todayHistorySubDate = null;
   }
 
+  void _pushStatusBarUpdate() {
+    final timer = getActiveTimer();
+    if (timer == null) {
+      platform.clearStatusBarTimer();
+    } else {
+      final endTimeMs = timer.start.add(timer.adjustedDuration).millisecondsSinceEpoch.toDouble();
+      final pausedRemaining = timer.isPaused ? timer.adjustedDuration.inSeconds.toDouble() : 0.0;
+      platform.setStatusBarTimer(
+          endTimeMs: endTimeMs,
+          totalDurationSeconds: timer.totalDuration.inSeconds.toDouble(),
+          isPaused: timer.isPaused,
+          pausedRemainingSeconds: pausedRemaining,
+          bgColor: timer.config.color.rgbaColor,
+          textColor: timer.config.color.rgbaTextColor);
+    }
+  }
+
   // INIT / DISPOSE
 
   Future<void> init() async {
@@ -684,6 +701,12 @@ class AppState extends ChangeNotifier {
     }
 
     _restartTicker();
+
+    platform.initPlatformCallHandler();
+    platform.onTimerComplete = () {
+      _pushStatusBarUpdate();
+      notifyListeners();
+    };
 
     // since init is async, notify listeners to ensure UI is updated
     notifyListeners();

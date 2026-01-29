@@ -45,6 +45,7 @@ class StatusItemView {
         }
     }
 
+    var onTimerComplete: (() -> Void)?
     private var nativeTimer: Timer?
 
     init() {
@@ -121,6 +122,7 @@ class StatusItemView {
         // Stop ticking when done (not paused and time is up)
         if !isPaused && remainingSeconds <= 0 && endTime != nil {
             stopNativeTimer()
+            onTimerComplete?()
         }
     }
 

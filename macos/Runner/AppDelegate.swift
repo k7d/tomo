@@ -41,6 +41,10 @@ class AppDelegate: FlutterAppDelegate {
         let channel = FlutterMethodChannel(name: "dev.k7d.tomo/status_bar",
                                            binaryMessenger: controller.engine.binaryMessenger)
 
+        statusBar?.statusItemView.onTimerComplete = {
+            channel.invokeMethod("onTimerComplete", arguments: nil)
+        }
+
         channel.setMethodCallHandler { [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
             switch call.method {
             case "setStatusBarTimer":

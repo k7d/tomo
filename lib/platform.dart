@@ -2,6 +2,16 @@ import 'package:flutter/services.dart';
 
 const platform = MethodChannel('dev.k7d.tomo/status_bar');
 
+Function()? onTimerComplete;
+
+void initPlatformCallHandler() {
+  platform.setMethodCallHandler((call) async {
+    if (call.method == 'onTimerComplete') {
+      onTimerComplete?.call();
+    }
+  });
+}
+
 void setStatusBarTimer(
     {required double endTimeMs,
     required double totalDurationSeconds,
