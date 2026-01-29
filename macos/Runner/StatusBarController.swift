@@ -195,7 +195,7 @@ class StatusItemView {
         ps.alignment = .center
         ps.lineBreakMode = .byClipping
         remainingTime.draw(
-            in: bgRect.insetBy(dx: 0, dy: 0),
+            in: bgRect.offsetBy(dx: 0, dy: -1),
             withAttributes: [
                 NSAttributedString.Key.font: font,
                 NSAttributedString.Key.paragraphStyle: ps,
