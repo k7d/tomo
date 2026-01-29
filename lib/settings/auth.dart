@@ -43,20 +43,15 @@ class Auth extends StatelessWidget {
 
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return;
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleUser = await GoogleSignIn.instance.authenticate();
+      final googleAuth = googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
       debugPrint('Error signing in with Google: $e');
-      // You might want to show an error message to the user
     }
     platform.openWindow();
   }
@@ -64,10 +59,9 @@ class Auth extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
-      await GoogleSignIn().signOut();
+      await GoogleSignIn.instance.signOut();
     } catch (e) {
       debugPrint('Error signing out: $e');
-      // You might want to show an error message to the user
     }
   }
 }

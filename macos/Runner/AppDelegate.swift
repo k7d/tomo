@@ -10,6 +10,10 @@ class AppDelegate: FlutterAppDelegate {
 
     var statusBar: StatusBarController?
 
+    override func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+        return true
+    }
+
     override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return false
     }
