@@ -17,48 +17,41 @@ Tomo is a desktop timer app, primarily intended for the [Pomodoro technique](htt
 * See daily total time for each timer
 * Configure multiple timers with dependencies
 * Configure completion sound effects
-* Realtime sync of timer config, current state and history across multiple devices
+* Sync timer config across devices via iCloud
 
 ## Implementation
 
-Tomo is written in Dart using Flutter. At the moment only MacOS is supported, although it should't be too difficult to add support for other platforms.
+Tomo is a native macOS app written in Swift using AppKit. Requires macOS 13+.
 
-Synchronization is implemented using Firebase. To enabled it, you need to configure Firebase first (see below).
+## Building
 
-## Running the app in development mode
-
-1. Open `macos/Runner.xcodeproj` in Xcode, select `Runner` target and configure team.
-2. Run `flutter run` from the root directory.
-
-## Building the app
+Requires [XcodeGen](https://github.com/yonaskolb/XcodeGen):
 
 ```sh
-flutter build macos
+brew install xcodegen
 ```
 
-Build results can be found in `macos/build/Release/`.
+Generate the Xcode project and build:
 
-## Configuring Firebase
+```sh
+xcodegen generate
+xcodebuild -project Tomo.xcodeproj -scheme Tomo build
+```
 
-This is optional step which enables syncing timer config, current state and history between multiple devices.
+Or open `Tomo.xcodeproj` in Xcode and hit Cmd+R.
 
-1. Run `flutterfire configure`
-2. Answer `y` to `? Generated FirebaseOptions file /Users/kaspars/projects/tomox/tomo/lib/firebase_options.dart already exists, do you want to override it?`
-3. Select `<create a new project>`
-4. Enter your choosen project ID (at least 6 characters)
-5. Select `macos` for `? Which platforms should your configuration support (use arrow keys & space to select)? `
-6. Go to [Firebase console](https://console.firebase.google.com/) > Authentication and enable Google provider.
-7. Rerun `flutterfire configure` (this will update `GoogleService-Info.plist`)
-8. Lookup `REVERSED_CLIENT_ID` from `GoogleService-Info.plist` and add it as a new URL scheme to `macos/Runner/Info.plist`:
+### Code signing
 
-    ```xml
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>REVERSED_CLIENT_ID</string>
-            </array>
-        </dict>
-    </array>
-    ```
+By default the project has no signing configuration. To enable automatic signing, create a `local.yml` file (gitignored) in the project root:
+
+```yaml
+targets:
+  Tomo:
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "Apple Development"
+        DEVELOPMENT_TEAM: YOUR_TEAM_ID
+```
+
+Then regenerate the project with `xcodegen generate`.
