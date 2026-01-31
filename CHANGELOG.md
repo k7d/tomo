@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.0
+
+- Rewrite app in native Swift and AppKit, removing Flutter dependency
+
 ## 4.1.0
 
 - Fix menu bar timer not updating when app is unfocused on macOS Tahoe
