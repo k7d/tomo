@@ -1,0 +1,31 @@
+include:
+  - path: local.yml
+    optional: true
+name: Tomo
+options:
+  bundleIdPrefix: dev.k7d
+  deploymentTarget:
+    macOS: "13.0"
+  xcodeVersion: "16.0"
+  createIntermediateGroups: true
+targets:
+  Tomo:
+    type: application
+    platform: macOS
+    sources:
+      - path: Tomo
+        excludes:
+          - "*.entitlements"
+    resources:
+      - path: Tomo/Sounds
+      - path: Tomo/Icons
+      - path: Tomo/Assets.xcassets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.k7d.tomo
+        PRODUCT_NAME: Tomo
+        MACOSX_DEPLOYMENT_TARGET: "13.0"
+        INFOPLIST_FILE: Tomo/Info.plist
+        SWIFT_VERSION: "5.9"
+        GENERATE_INFOPLIST_FILE: false
+        COMBINE_HIDPI_IMAGES: true
