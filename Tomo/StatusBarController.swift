@@ -28,7 +28,7 @@ extension NSImage {
 class StatusItemView {
     let font = NSFont.systemFont(ofSize: 13, weight: .regular)
     let icon = NSImage(named: "MenuBarIcon")
-    var tintedIcon = NSImage(named: "MenuBarIcon")
+    var tintedIcon: NSImage?
     var statusItem: NSStatusItem
     var isHighlighted = false
 
@@ -45,6 +45,7 @@ class StatusItemView {
 
     init() {
         self.statusItem = NSStatusBar.system.statusItem(withLength: calcStatusItemLength(""))
+        self.tintedIcon = icon
     }
 
     func setTimer(endTime: Date, totalDurationSeconds: Double, isPaused: Bool, pausedRemainingSeconds: Double, bgColor: NSColor, textColor: NSColor) {
