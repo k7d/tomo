@@ -253,28 +253,40 @@ class AppState {
 
     // MARK: - Persistence
 
+    private static let isDebug: Bool = {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }()
+
+    static func defaultsKey(_ key: String) -> String {
+        isDebug ? "debug_\(key)" : key
+    }
+
     private func persistTimerConfigs() {
         guard let data = try? JSONEncoder().encode(timerConfigs) else { return }
-        UserDefaults.standard.set(data, forKey: "timerConfigs")
+        UserDefaults.standard.set(data, forKey: Self.defaultsKey("timerConfigs"))
     }
 
     private func persistLastAction() {
         if let action = lastAction, let data = try? JSONEncoder().encode(action) {
-            UserDefaults.standard.set(data, forKey: "lastAction")
+            UserDefaults.standard.set(data, forKey: Self.defaultsKey("lastAction"))
         } else {
-            UserDefaults.standard.removeObject(forKey: "lastAction")
+            UserDefaults.standard.removeObject(forKey: Self.defaultsKey("lastAction"))
         }
     }
 
     private func loadFromDefaults() {
-        if let data = UserDefaults.standard.data(forKey: "timerConfigs"),
+        if let data = UserDefaults.standard.data(forKey: Self.defaultsKey("timerConfigs")),
            let configs = try? JSONDecoder().decode([TimerConfig].self, from: data) {
             timerConfigs = configs
         } else {
             timerConfigs = TimerConfig.defaultConfigs()
         }
 
-        if let data = UserDefaults.standard.data(forKey: "lastAction"),
+        if let data = UserDefaults.standard.data(forKey: Self.defaultsKey("lastAction")),
            let action = try? JSONDecoder().decode(StartedTimer.self, from: data) {
             lastAction = action
         }

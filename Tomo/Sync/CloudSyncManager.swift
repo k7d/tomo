@@ -19,15 +19,15 @@ class CloudSyncManager {
 
     func syncTimerConfigs(_ configs: [TimerConfig]) {
         guard let data = try? JSONEncoder().encode(configs) else { return }
-        store.set(data, forKey: "timerConfigs")
+        store.set(data, forKey: AppState.defaultsKey("timerConfigs"))
         store.synchronize()
     }
 
     func syncLastAction(_ action: StartedTimer?) {
         if let action = action, let data = try? JSONEncoder().encode(action) {
-            store.set(data, forKey: "lastAction")
+            store.set(data, forKey: AppState.defaultsKey("lastAction"))
         } else {
-            store.removeObject(forKey: "lastAction")
+            store.removeObject(forKey: AppState.defaultsKey("lastAction"))
         }
         store.synchronize()
     }
@@ -38,7 +38,7 @@ class CloudSyncManager {
 
         if reason == NSUbiquitousKeyValueStoreServerChange || reason == NSUbiquitousKeyValueStoreInitialSyncChange {
             // Merge remote configs
-            if let data = store.data(forKey: "timerConfigs"),
+            if let data = store.data(forKey: AppState.defaultsKey("timerConfigs")),
                let configs = try? JSONDecoder().decode([TimerConfig].self, from: data) {
                 AppState.shared.timerConfigs = configs
             }
