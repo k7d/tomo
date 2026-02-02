@@ -19,6 +19,13 @@ class EditTimerViewController: NSViewController {
         return NSColor(hue: h, saturation: 0.2, brightness: 0.35, alpha: 1)
     }
 
+    private var inputBgColor: NSColor {
+        let base = config.color.nsColor
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        (base.usingColorSpace(.sRGB) ?? base).getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+        return NSColor(hue: h, saturation: 0.25, brightness: 0.28, alpha: 1)
+    }
+
     override func loadView() {
         let container = NSView()
         container.wantsLayer = true
@@ -79,9 +86,13 @@ class EditTimerViewController: NSViewController {
         nameField.placeholderString = "Name"
         nameField.font = .systemFont(ofSize: 16)
         nameField.textColor = .white
-        nameField.backgroundColor = .clear
-        nameField.isBezeled = true
-        nameField.bezelStyle = .roundedBezel
+        nameField.drawsBackground = false
+        nameField.isBezeled = false
+        nameField.focusRingType = .none
+        nameField.wantsLayer = true
+        nameField.layer?.backgroundColor = inputBgColor.cgColor
+        nameField.layer?.cornerRadius = 4
+        nameField.heightAnchor.constraint(equalToConstant: 32).isActive = true
         nameField.onTextChanged = { [weak self] text in
             self?.config.name = text
             self?.saveConfig()
@@ -90,7 +101,7 @@ class EditTimerViewController: NSViewController {
         views.append(makeSpacer(20))
 
         // Duration editor
-        views.append(EditDurationView(duration: config.duration) { [weak self] duration in
+        views.append(EditDurationView(duration: config.duration, fieldBgColor: inputBgColor) { [weak self] duration in
             self?.config.duration = duration
             self?.saveConfig()
         })
@@ -144,7 +155,7 @@ class EditTimerViewController: NSViewController {
         }
     }
 
-    private func makeLabeledField(_ label: String, field: NSTextField) -> NSView {
+    private func makeLabeledField(_ label: String, field: NSView) -> NSView {
         let stack = NSStackView()
         stack.orientation = .vertical
         stack.alignment = .leading
@@ -159,6 +170,7 @@ class EditTimerViewController: NSViewController {
 
         return stack
     }
+
 
     private func makeStartNextDropdown() -> NSView {
         let stack = NSStackView()
