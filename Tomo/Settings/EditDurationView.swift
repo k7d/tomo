@@ -5,9 +5,11 @@ class EditDurationView: NSView {
     private let hoursField: NSTextField
     private let minutesField: NSTextField
     private let secondsField: NSTextField
+    private let fieldBgColor: NSColor
 
-    init(duration: TimeInterval, onChange: @escaping (TimeInterval) -> Void) {
+    init(duration: TimeInterval, fieldBgColor: NSColor = .clear, onChange: @escaping (TimeInterval) -> Void) {
         self.onChange = onChange
+        self.fieldBgColor = fieldBgColor
         let total = Int(duration)
         hoursField = NSTextField(string: "\(total / 3600)")
         minutesField = NSTextField(string: "\((total % 3600) / 60)")
@@ -48,11 +50,17 @@ class EditDurationView: NSView {
         lbl.textColor = labelTextColor
         col.addArrangedSubview(lbl)
 
+        let cell = VerticallyCenteredTextFieldCell(textCell: field.stringValue)
+        field.cell = cell
         field.font = .systemFont(ofSize: 16)
         field.textColor = .white
-        field.backgroundColor = .clear
-        field.isBezeled = true
-        field.bezelStyle = .roundedBezel
+        field.drawsBackground = false
+        field.isBezeled = false
+        field.focusRingType = .none
+        field.wantsLayer = true
+        field.layer?.backgroundColor = fieldBgColor.cgColor
+        field.layer?.cornerRadius = 4
+        field.heightAnchor.constraint(equalToConstant: 32).isActive = true
         field.delegate = self
         col.addArrangedSubview(field)
         field.widthAnchor.constraint(equalTo: col.widthAnchor).isActive = true
