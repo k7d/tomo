@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "setup": "ln -s \"$CONDUCTOR_ROOT_PATH/local.yml\" local.yml\nxcodegen generate \nopen Tomo.xcodeproj"
+    }
+}
