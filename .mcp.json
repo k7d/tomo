@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "peekaboo": {
+      "command": "npx",
+      "args": ["-y", "@steipete/peekaboo"]
+    }
+  }
+}
