@@ -51,7 +51,11 @@ class EditDurationView: NSView {
         col.addArrangedSubview(lbl)
 
         let cell = VerticallyCenteredTextFieldCell(textCell: field.stringValue)
+        cell.isEditable = true
+        cell.isSelectable = true
         field.cell = cell
+        field.isEditable = true
+        field.isSelectable = true
         field.font = .systemFont(ofSize: 16)
         field.textColor = .white
         field.drawsBackground = false
