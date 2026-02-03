@@ -61,6 +61,7 @@ class EditDurationView: NSView {
         field.drawsBackground = false
         field.isBezeled = false
         field.focusRingType = .none
+        field.appearance = NSAppearance(named: .darkAqua)
         field.wantsLayer = true
         field.layer?.backgroundColor = fieldBgColor.cgColor
         field.layer?.cornerRadius = 4

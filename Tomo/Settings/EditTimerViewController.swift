@@ -89,6 +89,7 @@ class EditTimerViewController: NSViewController {
         nameField.drawsBackground = false
         nameField.isBezeled = false
         nameField.focusRingType = .none
+        nameField.appearance = NSAppearance(named: .darkAqua)
         nameField.wantsLayer = true
         nameField.layer?.backgroundColor = inputBgColor.cgColor
         nameField.layer?.cornerRadius = 4
