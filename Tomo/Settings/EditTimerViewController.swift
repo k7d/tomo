@@ -186,6 +186,15 @@ class EditTimerViewController: NSViewController {
 
         let popup = NSPopUpButton()
         popup.translatesAutoresizingMaskIntoConstraints = false
+        popup.font = .systemFont(ofSize: 16)
+        popup.isBordered = false
+        popup.appearance = NSAppearance(named: .darkAqua)
+        popup.wantsLayer = true
+        popup.layer?.backgroundColor = inputBgColor.cgColor
+        popup.layer?.cornerRadius = 4
+        (popup.cell as? NSPopUpButtonCell)?.arrowPosition = .arrowAtBottom
+        popup.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        popup.contentTintColor = .white
 
         popup.addItem(withTitle: "Nothing")
         popup.lastItem?.representedObject = nil
