@@ -75,7 +75,7 @@ class ContentRootView: NSView {
 
         guard let window = self.window else { return }
         let screen = NSScreen.main
-        let maxHeight = screen.map { $0.frame.height * 0.5 } ?? 600
+        let maxHeight = screen.map { $0.frame.height * 0.8 } ?? 600
         let limitedHeight = min(totalHeight, maxHeight)
 
         let frame = window.frame
