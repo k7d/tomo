@@ -9,6 +9,7 @@ func makeNavButton(systemName: String, tooltip: String, action: @escaping () -> 
     btn.image = NSImage(systemSymbolName: systemName, accessibilityDescription: tooltip)?.withSymbolConfiguration(config)
     btn.contentTintColor = NSColor(srgbRed: 0x9B/255, green: 0x9B/255, blue: 0x99/255, alpha: 1)
     btn.toolTip = tooltip
+    btn.focusRingType = .none
     btn.target = nil
     btn.widthAnchor.constraint(equalToConstant: 30).isActive = true
     btn.heightAnchor.constraint(equalToConstant: 30).isActive = true
