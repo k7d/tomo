@@ -69,16 +69,17 @@ class AppState {
 
     private func getCurrentTimer() -> (StartedTimer?, Bool) {
         guard var timer = lastAction else { return (nil, false) }
-        var history: TimerHistory = [:]
 
         for i in 0..<maxTimerTomos {
             let duration = i == 0 ? timer.adjustedDuration : (config(for: timer.configId)?.duration ?? timer.adjustedDuration)
             let nextStart = timer.start.addingTimeInterval(duration + dismissTimerIn)
-            history.upsertRun(configId: timer.configId, start: timer.start, duration: duration)
 
             if Date() < nextStart {
                 return (timer, true)
             } else {
+                // Timer completed — commit to history so chained runs are tracked
+                committedHistory.upsertRun(configId: timer.configId, start: timer.start, duration: duration)
+
                 guard let cfg = config(for: timer.configId),
                       let nextId = cfg.startNextId,
                       let nextConfig = config(for: nextId) else {
@@ -200,8 +201,9 @@ class AppState {
     }
 
     var history: TimerHistory {
-        var h = committedHistory
+        // getCurrentTimer() commits completed chain timers to committedHistory
         let (timer, _) = getCurrentTimer()
+        var h = committedHistory
         if let timer = timer {
             let duration = min(Date().timeIntervalSince(timer.start), timer.adjustedDuration)
             h.upsertRun(configId: timer.configId, start: timer.start, duration: duration)
