@@ -61,10 +61,8 @@ class ContentRootView: NSView {
         }
         stackView.edgeInsets.top = hasAppBar ? 10 : 30
 
-        // After layout, update window height
-        DispatchQueue.main.async { [weak self] in
-            self?.updateWindowHeight()
-        }
+        stackView.layoutSubtreeIfNeeded()
+        updateWindowHeight()
     }
 
     func updateWindowHeight() {
@@ -78,8 +76,18 @@ class ContentRootView: NSView {
         let maxHeight = screen.map { $0.frame.height * 0.8 } ?? 600
         let limitedHeight = min(totalHeight, maxHeight)
 
-        let frame = window.frame
-        let newOrigin = NSPoint(x: frame.origin.x, y: frame.origin.y + frame.height - limitedHeight)
-        window.setFrame(NSRect(origin: newOrigin, size: NSSize(width: windowWidth, height: limitedHeight)), display: true, animate: false)
+        // Preserve the top-left corner position and resize atomically
+        let topLeft = NSPoint(x: window.frame.origin.x, y: window.frame.maxY)
+        let contentRect = NSRect(x: 0, y: 0, width: windowWidth, height: limitedHeight)
+        var frameRect = window.frameRect(forContentRect: contentRect)
+        frameRect.origin = NSPoint(x: topLeft.x, y: topLeft.y - frameRect.height)
+
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current.duration = 0
+        window.setFrame(frameRect, display: true)
+        NSAnimationContext.endGrouping()
+
+        // Reset scroll to top after resize
+        scrollView.contentView.setBoundsOrigin(.zero)
     }
 }
