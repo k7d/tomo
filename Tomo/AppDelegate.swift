@@ -28,6 +28,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let timersVC = TimersViewController()
         window.contentViewController = timersVC
 
+        // Set up main menu (for Cmd+Q support in LSUIElement app)
+        let mainMenu = NSMenu()
+        let appMenu = NSMenu()
+        appMenu.addItem(withTitle: "Quit Tomo", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let appMenuItem = NSMenuItem()
+        appMenuItem.submenu = appMenu
+        mainMenu.addItem(appMenuItem)
+        NSApp.mainMenu = mainMenu
+
         // Initialize app state
         AppState.shared.initialize()
 
